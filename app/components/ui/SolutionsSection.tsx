@@ -1,13 +1,13 @@
 // components/SolutionsSection.tsx
 import Link from "next/link";
-import { 
-  ArrowRight, 
-  Thermometer, 
-  Wind, 
-  Droplets, 
-  FlaskConical, 
-  Settings, 
-  Zap 
+import {
+  ArrowRight,
+  Thermometer,
+  Wind,
+  Droplets,
+  FlaskConical,
+  Settings,
+  Zap
 } from "lucide-react";
 
 const solutions = [
@@ -48,9 +48,11 @@ export default function SolutionsSection() {
     <section className="py-16 md:py-20 lg:py-28 bg-slate-50">
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
-          <span className="text-blue-600 text-xs font-semibold tracking-[0.3em] uppercase">
-            Solutions
-          </span>
+          <div className=" flex items-center gap-3 justify-center">
+            <span className="h-px w-10 bg-[#0A4266]" />
+            <span className="text-blue-600 text-xs font-semibold tracking-[0.3em] uppercase">
+              Solutions
+            </span></div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mt-2 mb-4">
             Engineered Solutions for Complex Industrial Processes
           </h2>
@@ -69,9 +71,9 @@ export default function SolutionsSection() {
                 className="bg-white p-6 md:p-8 border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group"
               >
                 <div className="mb-4">
-                  <Icon 
-                    size={36} 
-                    className="text-blue-600" 
+                  <Icon
+                    size={36}
+                    className="text-blue-600"
                     strokeWidth={1.5}
                   />
                 </div>

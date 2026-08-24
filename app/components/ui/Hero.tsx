@@ -16,14 +16,14 @@ export default function Hero() {
                     poster="/images/frame1.jpg"
                 >
                     <source
-                        src="images/video5.mp4"
+                        src="images/hero3.mp4"
                         type="video/mp4"
                     />
                     Your browser does not support the video tag.
                 </video>
 
                 {/* Darker left side for text readability */}
-<div className="absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-900/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-900/40 to-transparent" />
 
 
             </div>
@@ -42,36 +42,33 @@ export default function Hero() {
                             For a Sustainable Future
                         </span>
                     </h1>
-              
 
-                <p className="text-slate-300 text-base md:text-lg max-w-xl mb-8 leading-relaxed">
-                    Process engineering, turnkey plants and industrial solutions
-                    designed for efficiency, reliability and sustainable growth.
-                </p>
 
-                <div className="flex flex-wrap gap-4">
-                    <Link
-                        href="#"
-                        className="bg-blue-600 text-white px-8 py-3.5 text-sm font-semibold uppercase tracking-wider hover:bg-blue-700 transition transform hover:-translate-y-0.5"
-                    >
-                        Get a Quote
-                    </Link>
+                    <p className="text-slate-300 text-base md:text-lg max-w-xl mb-8 leading-relaxed">
+                        Process engineering, turnkey plants and industrial solutions
+                        designed for efficiency, reliability and sustainable growth.
+                    </p>
 
-                    <Link
-                        href="#"
-                        className="border border-slate-400 text-slate-300 px-8 py-3.5 text-sm font-semibold uppercase tracking-wider hover:bg-slate-600 transition flex items-center gap-2"
-                    >
-                        Explore Solutions
-                        <ArrowRight size={18} />
-                    </Link>
+
                 </div>
             </div>
-        </div>
 
-      {/* Scroll Indicator */ }
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-400 animate-bounce">
-        <ChevronDown size={32} />
-    </div>
-    </section >
-  );
+            {/* button */}
+            <div className=" absolute bottom-10  right-5 flex flex-wrap gap-4">
+
+
+                <Link
+                    href="#"
+                    className=" bg-blue-600  text-slate-300 px-8 py-4 text-sm font-semibold uppercase tracking-wider hover:bg-blue-700 transition flex items-center gap-2"
+                >
+                    Explore Solutions
+                    <ArrowRight size={18} />
+                </Link>
+            </div>
+            {/* Scroll Indicator */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-400 animate-bounce">
+                <ChevronDown size={32} />
+            </div>
+        </section >
+    );
 }

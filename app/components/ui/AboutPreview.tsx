@@ -18,7 +18,7 @@ export default function AboutPreview() {
           {/* Left - Image */}
           <div className="relative h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden rounded-sm">
             <Image
-              src="/images/"
+              src="/images/about.jpg"
               alt="MKS Industrial Solutions engineering facility"
               fill
               className="object-cover"
@@ -36,9 +36,12 @@ export default function AboutPreview() {
 
           {/* Right - Content */}
           <div>
-            <span className="text-blue-600 text-xs font-semibold tracking-[0.3em] uppercase">
-              About MKS
-            </span>
+
+            <div className=" flex items-center gap-3">
+          <span className="h-px w-10 bg-[#0A4266]" />
+            <h1 className="text-blue-600 text-xs font-semibold tracking-[0.3em] uppercase">
+            About MKS
+            </h1></div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mt-2 mb-4 leading-tight">
               Engineering Expertise That Turns Ideas Into Industrial Solutions
             </h2>
