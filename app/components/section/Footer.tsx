@@ -7,253 +7,355 @@ import {
     Phone,
     Mail,
     MapPin,
-    ArrowRight,
-    ChevronRight
+    ArrowUpRight,
+    ChevronRight,
 } from "lucide-react";
 import {
     FaFacebook,
     FaTwitter,
     FaLinkedinIn,
-    FaYoutube
+    FaYoutube,
 } from "react-icons/fa";
+
+const companyLinks = [
+    { name: "About MKS", href: "/about" },
+    { name: "Our Capabilities", href: "/capabilities" },
+    { name: "Industries", href: "/industries" },
+    { name: "Projects", href: "/projects" },
+    { name: "Contact Us", href: "/contact" },
+];
+
+const industryLinks = [
+    { name: "Food & Beverage", href: "/industries/food-beverage" },
+    { name: "Sugar", href: "/industries/sugar" },
+    { name: "Starch", href: "/industries/starch" },
+    { name: "Distillery", href: "/industries/distillery" },
+    { name: "Chemical", href: "/industries/chemical" },
+    { name: "Dairy", href: "/industries/dairy" },
+    { name: "Pharmaceuticals", href: "/industries/pharmaceuticals" },
+    { name: "Pulp & Paper", href: "/industries/pulp-paper" },
+    { name: "Textile", href: "/industries/textile" },
+    { name: "Wastewater", href: "/industries/wastewater" },
+];
+
+const productLinks = [
+    { name: "MVR Systems", href: "/products/mvr" },
+    { name: "Evaporators", href: "/products/evaporators" },
+    { name: "Dryers", href: "/products/dryers" },
+    { name: "Distillation Systems", href: "/products/distillation" },
+    { name: "Water Treatment Systems", href: "/products/water-treatment" },
+    { name: "Custom Process Systems", href: "/products/custom-process-systems" },
+];
 
 export default function Footer() {
     return (
-        <footer>
+        <footer className="relative overflow-hidden bg-[#02131F] text-white">
+            {/* Subtle background atmosphere */}
+            <div className="pointer-events-none absolute inset-0">
+                <div className="absolute -right-40 top-0 h-[500px] w-[500px] rounded-full bg-[#0A4266]/20 blur-3xl" />
 
+                <div className="absolute -left-40 bottom-0 h-[400px] w-[400px] rounded-full bg-[#27B3C2]/5 blur-3xl" />
+
+                {/* Technical grid */}
+                <div
+                    className="absolute inset-0 opacity-[0.025]"
+                    style={{
+                        backgroundImage:
+                            "linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)",
+                        backgroundSize: "60px 60px",
+                    }}
+                />
+            </div>
 
             {/* Main Footer */}
-            <div className="bg-slate-900 text-white/80">
-                <div className="container mx-auto px-4 md:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10">
-                        {/* Column 1 - Company Info */}
-                        <div className="lg:col-span-1">
-                            <div className="relative w-[180px] h-[50px] mb-4">
+            <div className="relative">
+                <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6 md:py-20 lg:px-8">
+
+                    {/* Top Brand Strip */}
+                    <div className="mb-14 flex flex-col gap-6 border-b border-white/10 pb-10 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <div className="relative mb-5 h-[48px] w-[175px]">
                                 <Image
                                     src="/images/mks_logo.png"
                                     alt="MKS Industrial Solutions"
                                     fill
-                                    className="object-contain"
-                                    sizes="180px"
+                                    className="object-contain object-left"
+                                    sizes="175px"
                                 />
                             </div>
-                            <p className="text-sm text-white/60 max-w-xs leading-relaxed">
-                                MKS Industrial Solutions delivers engineered process, utility and
-                                industrial solutions designed for efficiency, reliability and
-                                sustainable growth.
+
+                            <p className="max-w-xl text-sm leading-7 text-slate-400">
+                                Engineering process, utility and industrial solutions
+                                designed for efficiency, reliability and sustainable
+                                growth.
                             </p>
-                            <div className="flex gap-3 mt-6">
-                                <Link
-                                    href="#"
-                                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-cyan-500 transition flex items-center justify-center text-white/60 hover:text-white"
-                                    aria-label="Facebook"
+                        </div>
+
+                        <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-slate-500">
+                            <span className="h-px w-8 bg-[#27B3C2]" />
+                            Engineering • EPC • Process Solutions
+                        </div>
+                    </div>
+
+                    {/* Main Grid */}
+                    <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+
+                        {/* Company */}
+                        <div className="lg:col-span-3">
+                            <h3 className="mb-6 text-xs font-bold uppercase tracking-[0.2em] text-white">
+                                Company
+                            </h3>
+
+                            <ul className="space-y-3">
+                                {companyLinks.map((item) => (
+                                    <li key={item.name}>
+                                        <Link
+                                            href={item.href}
+                                            className="group flex items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-[#5DD5DE]"
+                                        >
+                                            <ChevronRight
+                                                size={13}
+                                                className="text-[#27B3C2] opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                                            />
+                                            <span className="transition-transform duration-200 group-hover:translate-x-1">
+                                                {item.name}
+                                            </span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Industries */}
+                        <div className="lg:col-span-3">
+                            <h3 className="mb-6 text-xs font-bold uppercase tracking-[0.2em] text-white">
+                                Industries
+                            </h3>
+
+                            <ul className="space-y-3">
+                                {industryLinks.map((item) => (
+                                    <li key={item.name}>
+                                        <Link
+                                            href={item.href}
+                                            className="group flex items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-[#5DD5DE]"
+                                        >
+                                            <ChevronRight
+                                                size={13}
+                                                className="text-[#27B3C2] opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                                            />
+
+                                            <span className="transition-transform duration-200 group-hover:translate-x-1">
+                                                {item.name}
+                                            </span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Products */}
+                        <div className="lg:col-span-3">
+                            <h3 className="mb-6 text-xs font-bold uppercase tracking-[0.2em] text-white">
+                                Products
+                            </h3>
+
+                            <ul className="space-y-3">
+                                {productLinks.map((item) => (
+                                    <li key={item.name}>
+                                        <Link
+                                            href={item.href}
+                                            className="group flex items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-[#5DD5DE]"
+                                        >
+                                            <ChevronRight
+                                                size={13}
+                                                className="text-[#27B3C2] opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                                            />
+
+                                            <span className="transition-transform duration-200 group-hover:translate-x-1">
+                                                {item.name}
+                                            </span>
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Contact */}
+                        <div className="lg:col-span-3">
+                            <h3 className="mb-6 text-xs font-bold uppercase tracking-[0.2em] text-white">
+                                Get In Touch
+                            </h3>
+
+                            <div className="space-y-5">
+
+                                {/* Phone */}
+                                <a
+                                    href="tel:+911234567890"
+                                    className="group flex gap-4"
                                 >
-                                    <FaFacebook size={16} />
-                                </Link>
-                                <Link
-                                    href="#"
-                                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-cyan-500 transition flex items-center justify-center text-white/60 hover:text-white"
-                                    aria-label="Twitter"
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 bg-white/[0.03] transition-colors group-hover:border-[#27B3C2]/40 group-hover:bg-[#27B3C2]/10">
+                                        <Phone
+                                            size={17}
+                                            className="text-[#27B3C2]"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+                                            Phone
+                                        </p>
+
+                                        <span className="text-sm text-slate-300 transition-colors group-hover:text-[#5DD5DE]">
+                                            +91 12345 67890
+                                        </span>
+                                    </div>
+                                </a>
+
+                                {/* Email */}
+                                <a
+                                    href="mailto:sales@mks.co.in"
+                                    className="group flex gap-4"
                                 >
-                                    <FaTwitter size={16} />
-                                </Link>
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 bg-white/[0.03] transition-colors group-hover:border-[#27B3C2]/40 group-hover:bg-[#27B3C2]/10">
+                                        <Mail
+                                            size={17}
+                                            className="text-[#27B3C2]"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+                                            Email
+                                        </p>
+
+                                        <span className="text-sm text-slate-300 transition-colors group-hover:text-[#5DD5DE]">
+                                            sales@mks.co.in
+                                        </span>
+                                    </div>
+                                </a>
+
+                                {/* Address */}
+                                <div className="flex gap-4">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-white/10 bg-white/[0.03]">
+                                        <MapPin
+                                            size={17}
+                                            className="text-[#27B3C2]"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+                                            Location
+                                        </p>
+
+                                        <p className="text-sm leading-6 text-slate-400">
+                                            Manana Road, Samalkha,
+                                            <br />
+                                            District Panipat, Haryana,
+                                            <br />
+                                            India – 132101
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Enquiry */}
                                 <Link
-                                    href="#"
-                                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-cyan-500 transition flex items-center justify-center text-white/60 hover:text-white"
-                                    aria-label="LinkedIn"
+                                    href="/contact"
+                                    className="group mt-2 inline-flex items-center gap-2 text-sm font-semibold text-[#5DD5DE]"
                                 >
-                                    <FaLinkedinIn size={16} />
-                                </Link>
-                                <Link
-                                    href="#"
-                                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-cyan-500 transition flex items-center justify-center text-white/60 hover:text-white"
-                                    aria-label="YouTube"
-                                >
-                                    <FaYoutube size={16} />
+                                    Business Enquiry
+
+                                    <ArrowUpRight
+                                        size={16}
+                                        className="transition-transform duration-200 group-hover:translate-x-1 group-hover:-translate-y-1"
+                                    />
                                 </Link>
                             </div>
                         </div>
+                    </div>
 
-                        {/* Column 2 - Company */}
-                        <div>
-                            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
-                                Company
-                            </h4>
-                            <ul className="space-y-2.5 text-sm">
-                                <li>
-                                    <Link href="/about" className="text-white/70 hover:text-cyan-400 transition flex items-center gap-1 group">
-                                        <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition" />
-                                        About MKS
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/capabilities" className="text-white/70 hover:text-cyan-400 transition flex items-center gap-1 group">
-                                        <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition" />
-                                        Our Capabilities
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/industries" className="text-white/70 hover:text-cyan-400 transition flex items-center gap-1 group">
-                                        <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition" />
-                                        Industries
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/projects" className="text-white/70 hover:text-cyan-400 transition flex items-center gap-1 group">
-                                        <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition" />
-                                        Projects
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="/contact" className="text-white/70 hover:text-cyan-400 transition flex items-center gap-1 group">
-                                        <ChevronRight size={12} className="opacity-0 group-hover:opacity-100 transition" />
-                                        Contact Us
-                                    </Link>
-                                </li>
-                            </ul>
+                    {/* Social + Trust Row */}
+                    <div className="mt-16 flex flex-col gap-7 border-t border-white/10 pt-8 md:flex-row md:items-center md:justify-between">
+
+                        <div className="flex items-center gap-3">
+                            <span className="mr-2 text-xs uppercase tracking-[0.15em] text-slate-500">
+                                Follow MKS
+                            </span>
+
+                            <Link
+                                href="#"
+                                aria-label="Facebook"
+                                className="flex h-9 w-9 items-center justify-center border border-white/10 text-slate-400 transition-all hover:border-[#27B3C2]/50 hover:bg-[#27B3C2]/10 hover:text-[#5DD5DE]"
+                            >
+                                <FaFacebook size={15} />
+                            </Link>
+
+                            <Link
+                                href="#"
+                                aria-label="Twitter"
+                                className="flex h-9 w-9 items-center justify-center border border-white/10 text-slate-400 transition-all hover:border-[#27B3C2]/50 hover:bg-[#27B3C2]/10 hover:text-[#5DD5DE]"
+                            >
+                                <FaTwitter size={15} />
+                            </Link>
+
+                            <Link
+                                href="#"
+                                aria-label="LinkedIn"
+                                className="flex h-9 w-9 items-center justify-center border border-white/10 text-slate-400 transition-all hover:border-[#27B3C2]/50 hover:bg-[#27B3C2]/10 hover:text-[#5DD5DE]"
+                            >
+                                <FaLinkedinIn size={15} />
+                            </Link>
+
+                            <Link
+                                href="#"
+                                aria-label="YouTube"
+                                className="flex h-9 w-9 items-center justify-center border border-white/10 text-slate-400 transition-all hover:border-[#27B3C2]/50 hover:bg-[#27B3C2]/10 hover:text-[#5DD5DE]"
+                            >
+                                <FaYoutube size={15} />
+                            </Link>
                         </div>
 
-                        {/* Column 3 - Solutions */}
-                        <div>
-                            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
-                                Solutions
-                            </h4>
-                            <ul className="space-y-2.5 text-sm">
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Evaporation
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Drying
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Water & Wastewater
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Distillation
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Process Engineering
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Energy / Utility Solutions
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-
-                        {/* Column 4 - Products */}
-                        <div>
-                            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
-                                Products
-                            </h4>
-                            <ul className="space-y-2.5 text-sm">
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        MVR Systems
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Evaporators
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Dryers
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Distillation Systems
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Water & Wastewater Systems
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href="#" className="text-white/70 hover:text-cyan-400 transition">
-                                        Custom Process Systems
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-
-                        {/* Column 5 - Contact */}
-                        <div>
-                            <h4 className="text-white font-semibold text-sm mb-4 uppercase tracking-wider">
-                                Get In Touch
-                            </h4>
-                            <ul className="space-y-3 text-sm">
-                                <li className="flex items-center gap-3">
-                                    <Phone size={18} className="text-cyan-400 flex-shrink-0" />
-                                    <a href="tel:+911234567890" className="text-white/70 hover:text-cyan-400 transition">
-                                        +91 12345 67890
-                                    </a>
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <Mail size={18} className="text-cyan-400 flex-shrink-0" />
-                                    <a href="mailto:info@mksindustrial.com" className="text-white/70 hover:text-cyan-400 transition">
-                                        Sales@mks.co.in
-
-
-                                    </a>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <MapPin size={18} className="text-cyan-400 flex-shrink-0 mt-0.5" />
-                                    <span className="text-white/70">
-                                        Manana Road, Samalkha,
-                                        District Panipat ,
-                                        Haryana
-                                        India – 132101
-                                    </span>
-                                </li>
-                                <li className="mt-4">
-                                    <Link
-                                        href="/contact"
-                                        className="inline-flex items-center text-cyan-400 font-semibold hover:text-cyan-300 transition gap-1 group"
-                                    >
-                                        Business Enquiry
-                                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                                    </Link>
-                                </li>
-                            </ul>
+                        <div className="flex items-center gap-3 text-xs text-slate-500">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#27B3C2]" />
+                            Delivering engineered solutions worldwide
                         </div>
                     </div>
                 </div>
 
                 {/* Bottom Footer */}
-                <div className="border-t border-white/10">
-                    <div className="container mx-auto px-4 md:px-6 lg:px-8 py-4">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                            <p className="text-xs text-white/40">
-                                © {new Date().getFullYear()} MKS Industrial Solutions. All rights reserved.
-                            </p>
-                            <div className="flex items-center gap-4 text-xs">
-                                <Link href="/privacy-policy" className="text-white/40 hover:text-white/60 transition">
-                                    Privacy Policy
-                                </Link>
-                                <span className="text-white/20">|</span>
-                                <Link href="/terms" className="text-white/40 hover:text-white/60 transition">
-                                    Terms & Conditions
-                                </Link>
-                                <span className="text-white/20">|</span>
-                                <Link href="/sitemap" className="text-white/40 hover:text-white/60 transition">
-                                    Sitemap
-                                </Link>
-                            </div>
+                <div className="border-t border-white/[0.07]">
+                    <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-5 sm:px-6 md:flex-row lg:px-8">
+
+                        <p className="text-xs text-slate-600">
+                            © {new Date().getFullYear()} MKS Industrial Solutions.
+                            All rights reserved.
+                        </p>
+
+                        <div className="flex flex-wrap items-center justify-center gap-3 text-xs">
+                            <Link
+                                href="/privacy-policy"
+                                className="text-slate-600 transition-colors hover:text-slate-300"
+                            >
+                                Privacy Policy
+                            </Link>
+
+                            <span className="text-slate-800">•</span>
+
+                            <Link
+                                href="/terms"
+                                className="text-slate-600 transition-colors hover:text-slate-300"
+                            >
+                                Terms & Conditions
+                            </Link>
+
+                            <span className="text-slate-800">•</span>
+
+                            <Link
+                                href="/sitemap"
+                                className="text-slate-600 transition-colors hover:text-slate-300"
+                            >
+                                Sitemap
+                            </Link>
                         </div>
                     </div>
                 </div>

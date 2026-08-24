@@ -8,19 +8,19 @@ const projects = [
     title: "ZLD Plant for Chemical Industry",
     industry: "Chemical",
     location: "Gujarat, India",
-    image: "/api/placeholder/500/350",
+    image: "/images/project/zld1.jpg",
   },
   {
     title: "MVR Evaporator System",
     industry: "Food & Beverage",
     location: "Maharashtra, India",
-    image: "/api/placeholder/500/350",
+    image: "/images/project/mvr1.jpg",
   },
   {
     title: "Distillation Unit for Distillery",
     industry: "Distillery",
     location: "Karnataka, India",
-    image: "/api/placeholder/500/350",
+    image: "/images/project/dist.jpg",
   },
 ];
 
@@ -30,9 +30,11 @@ export default function ProjectsPreview() {
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
+          <div className=" flex items-center gap-3 ">
+          <span className="h-px w-10 bg-[#0A4266]" />
             <span className="text-blue-600 text-xs font-semibold tracking-[0.3em] uppercase">
               Projects
-            </span>
+            </span></div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mt-2">
               Selected Projects
             </h2>
@@ -52,7 +54,7 @@ export default function ProjectsPreview() {
               key={index}
               className="group bg-white overflow-hidden border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
-              <div className="relative h-56 bg-blue-600/5">
+              <div className="relative h-64 bg-blue-600/5">
                 <Image
                   src={project.image}
                   alt={project.title}

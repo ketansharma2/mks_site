@@ -16,37 +16,47 @@ export default function Statistics() {
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          stats.forEach((stat, index) => {
-            let start = 0;
-            const end = stat.number;
-            const duration = 2000;
-            const increment = end / (duration / 16);
+    const section = sectionRef.current;
 
-            const timer = setInterval(() => {
-              start += increment;
-              if (start >= end) {
-                start = end;
-                clearInterval(timer);
-              }
-              setCounters((prev) => {
-                const newCounters = [...prev];
-                newCounters[index] = Math.floor(start);
-                return newCounters;
-              });
-            }, 16);
-          });
-        }
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || hasAnimated) return;
+
+        setHasAnimated(true);
+
+        stats.forEach((stat, index) => {
+          const duration = 1800;
+          const startTime = performance.now();
+
+          const animate = (currentTime: number) => {
+            const progress = Math.min(
+              (currentTime - startTime) / duration,
+              1
+            );
+
+            const easedProgress = 1 - Math.pow(1 - progress, 3);
+            const value = Math.floor(stat.number * easedProgress);
+
+            setCounters((prev) => {
+              const updated = [...prev];
+              updated[index] = value;
+              return updated;
+            });
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+
+          requestAnimationFrame(animate);
+        });
       },
       { threshold: 0.3 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    observer.observe(section);
 
     return () => observer.disconnect();
   }, [hasAnimated]);
@@ -54,28 +64,38 @@ export default function Statistics() {
   return (
     <section
       ref={sectionRef}
-      className="bg-blue-600 py-12 md:py-16 lg:py-20 border-t border-blue-500/30"
+      className="relative overflow-hidden bg-[#0A4266] py-14 sm:py-16 md:py-20"
     >
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+      {/* Soft background variation */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0A4266] via-[#0E527C] to-[#0A4266]" />
+
+      {/* Subtle borders */}
+      <div className="absolute inset-x-0 top-0 h-px bg-white/15" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-white/15" />
+
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4">
           {stats.map((stat, index) => (
             <div
-              key={index}
-              className={`text-center ${
-                index < stats.length - 1
-                  ? "border-r border-white/20 last:border-r-0"
-                  : ""
-              } ${
-                index === 1 ? "border-r border-white/20" : ""
-              } md:border-r md:border-white/20 last:md:border-r-0`}
+              key={stat.label}
+              className={`
+                group relative px-4 py-5 text-center
+                sm:px-6 md:py-2 lg:px-8
+                ${index !== 0 ? "border-l border-white/20" : ""}
+              `}
             >
-              <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">
+              <div className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-5xl lg:text-6xl">
                 {counters[index]}
-                {stat.suffix}
+                <span className="ml-1 text-[#5DD5DE]">
+                  {stat.suffix}
+                </span>
               </div>
-              <div className="text-white/80 text-xs md:text-sm uppercase tracking-wider mt-1 md:mt-2">
+
+              <div className="mt-2 text-[10px] font-medium uppercase tracking-[0.16em] text-white/75 sm:text-xs">
                 {stat.label}
               </div>
+
+              <div className="mx-auto mt-4 h-px w-7 bg-[#5DD5DE] transition-all duration-300 group-hover:w-11" />
             </div>
           ))}
         </div>
