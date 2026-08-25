@@ -426,9 +426,9 @@ function IndustryBlock({
   items: string[];
 }) {
   return (
-    <div className="border border-[#062B49]/30 p-6 rounded-3xl">
+    <div className=" group border border-[#062B49]/30 p-6 rounded-3xl hover:bg-[#062B49] transition-all duration-300">
 
-      <h3 className="text-lg font-semibold text-[#062B49]">
+      <h3 className="text-lg font-semibold text-[#062B49] group-hover:text-white">
         {title}
       </h3>
 
@@ -438,7 +438,7 @@ function IndustryBlock({
 
           <div
             key={item}
-            className="flex items-center gap-3 text-sm text-[#062B49]/75"
+            className="flex items-center gap-3 text-sm text-[#062B49]/75 group-hover:text-white/75"
           >
 
             <span className="h-1.5 w-1.5 shrink-0 bg-[#27B3C2]" />
