@@ -36,7 +36,7 @@ export default function ProjectsPreview() {
               Projects
             </span></div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mt-2">
-              Selected Projects
+              Turnkey Projects
             </h2>
           </div>
           <Link

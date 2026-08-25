@@ -12,6 +12,17 @@ import {
   MessageSquare,
 } from "lucide-react";
 
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact | MKS Industrial Solutions",
+  description:
+    "Contact MKS Industrial Solutions for industrial process engineering, evaporation, drying, water and wastewater, energy and utility solutions.",
+  alternates: {
+    canonical: "https://mks.co.in/contact",
+  },
+};
 export default function ContactPage() {
   return (
     <main className="bg-white text-slate-700">
