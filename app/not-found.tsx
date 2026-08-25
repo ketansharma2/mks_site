@@ -15,7 +15,7 @@ export default function NotFound() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#F5F9FC] text-[#062B49]">
 
-        <div className="bg-[#062B49] h-24 w-full"></div>
+      <div className="bg-[#062B49]  h-16 lg:h-24 sm:h-20 w-full"></div>
       {/* Background Grid */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.035]"
@@ -58,10 +58,17 @@ export default function NotFound() {
 
               {/* Teal Line */}
               <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "120px" }}
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="absolute bottom-3 left-2 h-2 rounded-full bg-[#27B3C2]"
+                className="
+    absolute bottom-1 left-2
+    h-1.5 sm:h-2
+    w-52 sm:w-72 lg:w-[360px]
+    origin-left
+    rounded-full
+    bg-[#27B3C2]
+  "
               />
             </div>
 

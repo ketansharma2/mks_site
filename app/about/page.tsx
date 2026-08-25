@@ -7,6 +7,18 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About | MKS Industrial Solutions",
+  description:
+    "Learn about MKS Industrial Solutions, our engineering expertise, industrial process solutions and commitment to efficient and sustainable operations.",
+  alternates: {
+    canonical: "https://mks.co.in/about",
+  },
+};
+
 export default function AboutPage() {
   return (
     <main className="bg-white text-slate-700">
@@ -19,7 +31,7 @@ export default function AboutPage() {
 
           <div className="max-w-3xl">
 
-            
+
 
             <h1 className="text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
               Engineering Expertise
@@ -246,17 +258,17 @@ export default function AboutPage() {
       {/* =====================================================
           INDUSTRIES
       ===================================================== */}
-      <section className="bg-[#062B49] py-16 md:py-20">
+      <section className="bg-white py-16 md:py-20">
 
         <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
 
           <div className="mb-10">
 
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#5DD5DE]">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#0A4266]">
               Industries We Serve
             </p>
 
-            <h2 className="text-3xl font-bold text-white md:text-4xl">
+            <h2 className="text-3xl font-bold text-[#062B49] md:text-4xl">
               Industry-Focused Process Solutions
             </h2>
 
@@ -284,6 +296,59 @@ export default function AboutPage() {
                 "Fuel Ethanol",
                 "Distillery",
                 "Lube Refining",
+              ]}
+            />
+            {/* Sugar */}
+            <IndustryBlock
+              title="Sugar"
+              items={[
+                "Sugar Concentration",
+                "Sugar Crystallization",
+                "Molasses Concentration",
+                "Syrup Concentration",
+              ]}
+            />
+
+            {/* Starch */}
+            <IndustryBlock
+              title="Starch"
+              items={[
+                "Starch Processing",
+                "Starch Concentration",
+                "Glucose Production",
+                "Maltodextrin Production",
+              ]}
+            />
+            {/* Distillery */}
+            <IndustryBlock
+              title="Distillery"
+              items={[
+                "Fuel Ethanol",
+                "Spent Wash Treatment",
+                "Spent Lees Treatment",
+                "Zero Liquid Discharge",
+              ]}
+            />
+
+            {/* Dairy */}
+            <IndustryBlock
+              title="Dairy"
+              items={[
+                "Milk Concentration",
+                "Whey Concentration",
+                "Dairy Wastewater Treatment",
+                "Milk Powder Processing",
+              ]}
+            />
+
+            {/* Textile */}
+            <IndustryBlock
+              title="Textile"
+              items={[
+                "Textile Wastewater Treatment",
+                "Dyeing Effluent Treatment",
+                "Chemical Recovery",
+                "Zero Liquid Discharge",
               ]}
             />
 
@@ -361,9 +426,9 @@ function IndustryBlock({
   items: string[];
 }) {
   return (
-    <div className="border border-white/10 p-6">
+    <div className="border border-[#062B49]/30 p-6 rounded-3xl">
 
-      <h3 className="text-lg font-semibold text-white">
+      <h3 className="text-lg font-semibold text-[#062B49]">
         {title}
       </h3>
 
@@ -373,7 +438,7 @@ function IndustryBlock({
 
           <div
             key={item}
-            className="flex items-center gap-3 text-sm text-white/65"
+            className="flex items-center gap-3 text-sm text-[#062B49]/75"
           >
 
             <span className="h-1.5 w-1.5 shrink-0 bg-[#27B3C2]" />

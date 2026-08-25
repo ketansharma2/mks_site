@@ -11,9 +11,17 @@ const geistSans = Geist({
 
 
 export const metadata: Metadata = {
-  title: "MKS Industrial Solutions",
+  title: {
+    default: "MKS Industrial Solutions",
+    template: "%s | MKS Industrial Solutions",
+  },
+
   description:
     "MKS Industrial Solutions delivers engineered process, evaporation, drying, water treatment and industrial solutions.",
+
+  icons: {
+    icon: "/images/mks.png",
+  },
 };
 
 export default function RootLayout({
