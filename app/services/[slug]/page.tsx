@@ -56,7 +56,7 @@ export async function generateMetadata({
             type: "website",
             images: [
                 {
-                    url: "/images/services/service-engineering.jpg",
+                    url: "/images/mks.png",
                     width: 1200,
                     height: 630,
                     alt: service.title,

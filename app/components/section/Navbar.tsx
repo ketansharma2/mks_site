@@ -10,7 +10,7 @@ type NavChild = {
   href: string;
 };
 
-type ProductGroup = {
+type MegaMenuGroup = {
   label: string;
   href: string;
   children?: NavChild[];
@@ -20,7 +20,7 @@ type NavItem = {
   label: string;
   href: string;
   dropdown?: NavChild[];
-  megaMenu?: ProductGroup[];
+  megaMenu?: MegaMenuGroup[];
 };
 
 const navItems: NavItem[] = [
@@ -190,6 +190,14 @@ const navItems: NavItem[] = [
         href: "/industries/distillery",
       },
       {
+        label: "Pulp & Paper",
+        href: "/industries/pulp&paper",
+      },
+      {
+        label: "Pharmaceuticals",
+        href: "/industries/pharma",
+      },
+      {
         label: "Chemical",
         href: "/industries/chemical",
       },
@@ -210,6 +218,62 @@ const navItems: NavItem[] = [
   {
     label: "Projects",
     href: "/projects",
+    megaMenu: [
+      {
+        label: "Water Management",
+        href: "/projects/water-management",
+        children: [
+          {
+            label: "Zero Liquid Discharge (ZLD) Plant",
+            href: "/products/water-management/zero-liquid-discharge",
+          },
+          {
+            label: "Effluent Treatment Plant (ETP)",
+            href: "/products/water-management/effluent-treatment-plant",
+          },
+          {
+            label: "Sewage Treatment Plant (STP)",
+            href: "/products/water-management/sewage-treatment-plant",
+          },
+          {
+            label: "Industrial RO Plants",
+            href: "/products/water-management/industrial-ro-plants",
+          },
+          {
+            label: "Low Energy Consuming ZLD Plant",
+            href: "/products/water-management/low-energy-zld",
+          },
+        ],
+      },
+
+      {
+        label: "Starch & Derivatives",
+        href: "/projects/starch-derivatives",
+        children: [
+          {
+            label: "Rice Based Liquid Glucose Plant",
+            href: "/projects/starch-derivatives/rice-based",
+          },
+          {
+            label: "Maize Based Liquid Glucose Plant",
+            href: "/projects/starch-derivatives/maize-based",
+          },
+          {
+            label: "Rice & Maize Based Fructose Plant",
+            href: "/projects/starch-derivatives/rice-and-maize-based",
+          }
+        ]
+      },
+      {
+        label: "Egg Powder Plant",
+        href: "/projects/egg-powder-plant",
+      },
+
+      {
+        label: "MVR Evaporators",
+        href: "/projects/mvr-evaporators",
+      },
+    ],
   },
   {
     label: "Resources",
@@ -463,23 +527,23 @@ export default function Navbar() {
 
                     <div className="grid grid-cols-3 gap-x-8 gap-y-7">
 
-                      {item.megaMenu.map((product) => (
-                        <div key={product.href}>
+                      {item.megaMenu.map((group) => (
+                        <div key={group.href}>
 
                           {/* Main Product */}
                           <Link
-                            href={product.href}
+                            href={group.href}
                             className="text-sm font-semibold text-[#062B49] transition-colors hover:text-[#27B3C2]"
                           >
-                            {product.label}
+                            {group.label}
                           </Link>
 
 
-                          {/* Sub Products */}
-                          {product.children && (
+                          {/* Sub  */}
+                          {group.children && (
                             <div className="mt-3 space-y-2">
 
-                              {product.children.map((child) => (
+                              {group.children.map((child) => (
                                 <Link
                                   key={child.href}
                                   href={child.href}
@@ -500,14 +564,12 @@ export default function Navbar() {
 
                     {/* Bottom Link */}
                     <div className="mt-6 border-t border-slate-100 pt-4">
-
                       <Link
-                        href="/products"
+                        href={item.href}
                         className="text-sm font-semibold text-[#27B3C2] transition-colors hover:text-[#062B49]"
                       >
-                        View All Products →
+                        View All {item.label} →
                       </Link>
-
                     </div>
 
                   </div>

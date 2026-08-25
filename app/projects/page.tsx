@@ -47,21 +47,21 @@ const projects = [
     category: "Evaporation",
     description:
       "Engineered evaporation solutions for industrial concentration and process applications.",
-    image: "/images/projects/project-1.jpg",
+    image: "/images/project/indus1.png",
   },
   {
     title: "Water & Wastewater Treatment",
     category: "Water Treatment",
     description:
       "Industrial water and wastewater treatment systems designed around plant-specific requirements.",
-    image: "/images/projects/project-2.jpg",
+      image: "/images/project/indus2.png",
   },
   {
     title: "Industrial Drying System",
     category: "Drying",
     description:
       "Process drying solutions developed for efficient moisture removal and reliable plant operation.",
-    image: "/images/projects/project-3.jpg",
+      image: "/images/project/indus3.png",
   },
 ];
 
@@ -244,7 +244,7 @@ export default function ProjectsPage() {
                     src={project.image}
                     alt={`${project.title} - MKS Industrial Solutions`}
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-2xl hover:scale-110 transition-all duration-700"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
 
@@ -352,10 +352,6 @@ export default function ProjectsPage() {
 
         </div>
       </section>
-
-
-    
-
     </main>
   );
 }
