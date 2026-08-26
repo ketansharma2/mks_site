@@ -83,9 +83,9 @@ export default async function IndustryPage({
         />
 
         {/* MKS Hero Overlay */}
-        <div className="absolute inset-0 bg-[#062B49]/75" />
+        <div className="absolute inset-0 bg-[#062B49]/65" />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#062B49] via-[#062B49]/85 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#062B49] via-[#062B49]/65 to-transparent" />
 
         <div className="relative z-10 mx-auto flex min-h-[600px] max-w-7xl items-center px-6 py-24 lg:px-8">
 

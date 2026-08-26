@@ -289,11 +289,11 @@ const navItems: NavItem[] = [
       },
       {
         label: "Brochures",
-        href: "/resources/brochures",
+        href: "/resources#brochures",
       },
       {
         label: "FAQs",
-        href: "/resources/faqs",
+        href: "/resources#faqs",
       },
       {
         label: "Blogs",

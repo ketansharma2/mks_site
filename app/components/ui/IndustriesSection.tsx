@@ -59,7 +59,7 @@ const industries = [
 export default function IndustriesSection() {
   return (
     <section className="bg-white py-20 md:py-24 lg:py-28">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-8xl px-5 sm:px-6 lg:px-8">
 
         {/* Header */}
         <div className="mb-12 flex flex-col md:mb-14 md:flex-row md:items-end md:justify-between">
@@ -99,7 +99,7 @@ export default function IndustriesSection() {
         </div>
 
         {/* Industry Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {industries.map((industry) => (
             <Link
               href="/industries"
