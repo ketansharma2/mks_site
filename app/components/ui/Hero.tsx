@@ -1,32 +1,13 @@
 // components/Hero.tsx
 import Link from "next/link";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import HeroVideo from "./HeroVideo";
 
 export default function Hero() {
     return (
         <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden">
             {/* Background Video */}
-            <div className="absolute inset-0 w-full h-full">
-                <video
-                    className="w-full h-full object-cover "
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    poster="/images/frame1.jpg"
-                >
-                    <source
-                        src="images/hero3.mp4"
-                        type="video/mp4"
-                    />
-                    Your browser does not support the video tag.
-                </video>
-
-                {/* Darker left side for text readability */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-900/40 to-transparent" />
-
-
-            </div>
+            <HeroVideo />
 
             {/* Hero Content */}
             <div className="relative container mx-auto px-4 md:px-8 z-10">
