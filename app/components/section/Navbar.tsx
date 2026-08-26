@@ -191,7 +191,7 @@ const navItems: NavItem[] = [
       },
       {
         label: "Pulp & Paper",
-        href: "/industries/pulp&paper",
+        href: "/industries/pulp-paper",
       },
       {
         label: "Pharmaceuticals",
@@ -211,7 +211,7 @@ const navItems: NavItem[] = [
       },
       {
         label: "Water & Wastewater",
-        href: "/industries/water-wastewater",
+        href: "/industries/wastewater",
       },
     ],
   },
