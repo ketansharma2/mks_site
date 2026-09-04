@@ -276,6 +276,24 @@ const navItems: NavItem[] = [
     ],
   },
   {
+    label: "MKS Intelligence",
+    href: "/mks-intelligence",
+    dropdown: [
+      {
+        label: "Plant Assessment",
+        href: "/mks-intelligence/plant-assessment",
+      },
+      {
+        label: "Solution Finder",
+        href: "/mks-intelligence/solution-finder",
+      },
+      {
+        label: "Industrial Calculator",
+        href: "/mks-intelligence/industrial-calculator",
+      },
+    ],
+  },
+  {
     label: "Resources",
     href: "/resources",
     dropdown: [
@@ -403,16 +421,16 @@ export default function Navbar() {
           className="flex shrink-0 items-center"
           aria-label="MKS Industrial Solutions Home"
         >
-          <div className="relative h-[42px] w-[140px] md:h-[48px] md:w-[160px] lg:h-[55px] lg:w-[180px]">
-            <Image
-              src="/images/mks.png"
-              alt="MKS Industrial Solutions"
-              fill
-              priority
-              className="object-contain"
-              sizes="(max-width: 768px) 140px, (max-width: 1024px) 160px, 180px"
-            />
-          </div>
+          <div className="relative h-[50px] w-[170px] md:h-[58px] md:w-[195px] lg:h-[65px] lg:w-[220px]">
+  <Image
+    src="/images/mks.png"
+    alt="MKS Industrial Solutions"
+    fill
+    priority
+    className="object-contain"
+    sizes="(max-width: 768px) 170px, (max-width: 1024px) 195px, 220px"
+  />
+</div>
         </Link>
 
         {/* =====================================================
@@ -656,7 +674,7 @@ export default function Navbar() {
                 return (
                   <div
                     key={item.label}
-                    className="border-b border-slate-100 last:border-b-0"
+                    className="border-b border-slate-100 "
                   >
 
                     {/* ==========================================

@@ -141,7 +141,7 @@ export const blogs = [
             {
                 heading: "Evaluating Solutions",
                 text: "Engineering analysis allows different technologies and approaches to be compared based on process requirements, performance and operating conditions.",
-            },
+            },     
             {
                 heading: "Better Project Decisions",
                 text: "A structured consultancy approach can reduce project uncertainty and help establish a practical path from feasibility to implementation.",
