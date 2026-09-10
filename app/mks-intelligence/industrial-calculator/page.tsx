@@ -17,7 +17,7 @@ import { calculateZLD } from "@/app/lib/calculators/zld";
 import { calculatePlantCapacity } from "@/app/lib/calculators/plantCapacity";
 import { calculateEnergy } from "@/app/lib/calculators/energy";
 import { calculateWastewater } from "@/app/lib/calculators/wastewater";
-import { calculateROI } from "@/app/lib/calculators/roi"
+import { calculateRicePlantROI, plantOptions } from "@/app/lib/calculators/ricePlantROI"
 
 type CalculatorType =
     | "water-saving"
@@ -25,7 +25,7 @@ type CalculatorType =
     | "capacity"
     | "energy"
     | "wastewater"
-    | "roi";
+    | "rice-roi";
 
 interface CalculatorInputData {
     [key: string]: string;
@@ -37,7 +37,7 @@ const calculatorTitles: Record<CalculatorType, string> = {
     capacity: "Plant Capacity Calculator",
     energy: "Energy Calculator",
     wastewater: "Wastewater Treatment Calculator",
-    roi: "ROI Calculator",
+    "rice-roi": "Rice Plant ROI Calculator",
 };
 
 const defaultInputs: Record<
@@ -79,24 +79,24 @@ const defaultInputs: Record<
         tss: "",
     },
 
-    roi: {
-        projectInvestment: "",
-        annualSavings: "",
-        annualRevenue: "",
-        projectLife: "",
+    "rice-roi": {
+        capacity: "100",
+        brokerRiceCost: "",
+        electricityCost: "",
+        steamCost: "",
     },
 };
 
 export default function IndustrialCalculatorPage() {
     const [selectedCalculator, setSelectedCalculator] =
-        useState<CalculatorType>("water-saving");
+        useState<CalculatorType>("rice-roi");
 
     const [inputs, setInputs] =
         useState<CalculatorInputData>(
             defaultInputs["water-saving"]
         );
 
-        const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<any>(null);
 
     const [hasCalculated, setHasCalculated] =
         useState(false);
@@ -196,19 +196,16 @@ export default function IndustrialCalculatorPage() {
 
                 break;
 
-            case "roi":
-                calculatedResult = calculateROI({
-                    projectInvestment:
-                        getNumber("projectInvestment"),
-                    annualSavings:
-                        getNumber("annualSavings"),
-                    annualRevenue:
-                        getNumber("annualRevenue"),
-                    projectLife:
-                        getNumber("projectLife"),
+            case "rice-roi":
+                calculatedResult = calculateRicePlantROI({
+                    capacity: getNumber("capacity"),
+                    brokenRiceCost: getNumber("brokerRiceCost"),
+                    electricityCost: getNumber("electricityCost"),
+                    steamCost: getNumber("steamCost"),
                 });
 
                 break;
+
         }
 
         setResult(calculatedResult);
@@ -271,6 +268,14 @@ export default function IndustrialCalculatorPage() {
 
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             <CalculatorSelector
+                                id="rice-roi"
+                                title="Rice Plant ROI"
+                                description="Estimate rice plant investment recovery"
+                                icon={TrendingUp}
+                                active={selectedCalculator === "rice-roi"}
+                                onClick={handleCalculatorChange}
+                            />
+                            <CalculatorSelector
                                 id="water-saving"
                                 title="Water Saving"
                                 description="Estimate potential water savings"
@@ -317,14 +322,7 @@ export default function IndustrialCalculatorPage() {
                                 onClick={handleCalculatorChange}
                             />
 
-                            <CalculatorSelector
-                                id="roi"
-                                title="ROI Calculator"
-                                description="Estimate project return on investment"
-                                icon={TrendingUp}
-                                active={selectedCalculator === "roi"}
-                                onClick={handleCalculatorChange}
-                            />
+
                         </div>
                     </div>
 
@@ -620,61 +618,143 @@ export default function IndustrialCalculatorPage() {
                                     />
                                 </div>
                             )}
+                            {/* RICE PLANT ROI */}
+                            {selectedCalculator === "rice-roi" && (
+                                <div className="space-y-4">
 
-                            {/* ROI */}
-                            {selectedCalculator === "roi" && (
-                                <div className="space-y-5">
+                                    {/* Plant Capacity */}
+                                    <div>
+                                        <label className="mb-2 block text-sm font-semibold text-[#062B49]">
+                                            Plant Capacity
+                                        </label>
+
+                                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                            {plantOptions.map((plant) => {
+                                                const selected =
+                                                    inputs.capacity === String(plant.capacity);
+
+                                                return (
+                                                    <button
+                                                        key={plant.capacity}
+                                                        type="button"
+                                                        onClick={() =>
+                                                            handleInputChange(
+                                                                "capacity",
+                                                                String(plant.capacity)
+                                                            )
+                                                        }
+                                                        className={`rounded-xl border px-4 py-3 text-left transition ${selected
+                                                            ? "border-[#27B3C2] bg-[#062B49] ring-1 ring-[#27B3C2]"
+                                                            : "border-slate-200 bg-white hover:border-[#27B3C2]"
+                                                            }`}
+                                                    >
+                                                        <p
+                                                            className={`text-lg font-bold ${selected
+                                                                ? "text-[#5DD5DE]"
+                                                                : "text-[#062B49]"
+                                                                }`}
+                                                        >
+                                                            {plant.capacity}
+                                                        </p>
+
+                                                        <p
+                                                            className={`mt-0.5 text-xs ${selected
+                                                                ? "text-white/60"
+                                                                : "text-slate-500"
+                                                                }`}
+                                                        >
+                                                            TPD
+                                                        </p>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Investment */}
+                                    <div className="rounded-xl border border-[#27B3C2]/20 bg-[#27B3C2]/5 p-4">
+                                        <div className="flex items-center justify-between gap-4">
+                                            <div>
+                                                <p className="text-sm font-medium text-slate-600">
+                                                    Capital Investment
+                                                </p>
+
+                                                <p className="mt-1 text-xl font-bold text-[#062B49]">
+                                                    ₹
+                                                    {
+                                                        plantOptions.find(
+                                                            (plant) =>
+                                                                plant.capacity ===
+                                                                Number(inputs.capacity)
+                                                        )?.investment
+                                                    }{" "}
+                                                    Cr
+                                                </p>
+                                            </div>
+
+                                            <div className="text-right">
+                                                <p className="text-xs text-slate-500">
+                                                    Selected Capacity
+                                                </p>
+
+                                                <p className="mt-0.5 font-semibold text-[#062B49]">
+                                                    {inputs.capacity} TPD
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Operating Costs */}
+                                    <div className="border-t border-slate-100 pt-4">
+                                        <h3 className="text-base font-semibold text-[#062B49]">
+                                            Operating Costs
+                                        </h3>
+
+                                        <p className="mt-1 text-sm text-slate-500">
+                                            Enter the current raw material and utility costs.
+                                        </p>
+                                    </div>
+
+                                    {/* Inputs */}
                                     <CalculatorInput
-                                        label="Project Investment"
-                                        placeholder="e.g. 5000000"
-                                        unit="₹"
-                                        value={inputs.projectInvestment}
+                                        label="Broken Rice Cost"
+                                        placeholder="e.g. 25"
+                                        unit="₹ / kg"
+                                        value={inputs.brokerRiceCost}
                                         onChange={(value) =>
-                                            handleInputChange(
-                                                "projectInvestment",
-                                                value
-                                            )
+                                            handleInputChange("brokerRiceCost", value)
                                         }
                                     />
 
-                                    <CalculatorInput
-                                        label="Annual Operating Savings"
-                                        placeholder="e.g. 1500000"
-                                        unit="₹/year"
-                                        value={inputs.annualSavings}
-                                        onChange={(value) =>
-                                            handleInputChange(
-                                                "annualSavings",
-                                                value
-                                            )
-                                        }
-                                    />
+                                    {/* Electricity + Steam Cost */}
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <CalculatorInput
+                                            label="Electricity Cost"
+                                            placeholder="e.g. 8"
+                                            unit="₹ / kg"
+                                            value={inputs.electricityCost}
+                                            onChange={(value) =>
+                                                handleInputChange(
+                                                    "electricityCost",
+                                                    value
+                                                )
+                                            }
+                                        />
 
-                                    <CalculatorInput
-                                        label="Annual Additional Revenue"
-                                        placeholder="e.g. 500000"
-                                        unit="₹/year"
-                                        value={inputs.annualRevenue}
-                                        onChange={(value) =>
-                                            handleInputChange(
-                                                "annualRevenue",
-                                                value
-                                            )
-                                        }
-                                    />
+                                        <CalculatorInput
+                                            label="Steam Cost"
+                                            placeholder="e.g. 2"
+                                            unit="₹ / kg"
+                                            value={inputs.steamCost}
+                                            onChange={(value) =>
+                                                handleInputChange(
+                                                    "steamCost",
+                                                    value
+                                                )
+                                            }
+                                        />
+                                    </div>
 
-                                    <CalculatorInput
-                                        label="Project Life"
-                                        placeholder="e.g. 10"
-                                        unit="years"
-                                        value={inputs.projectLife}
-                                        onChange={(value) =>
-                                            handleInputChange(
-                                                "projectLife",
-                                                value
-                                            )
-                                        }
-                                    />
                                 </div>
                             )}
 
@@ -737,21 +817,21 @@ function CalculatorSelector({
             type="button"
             onClick={() => onClick(id)}
             className={`group rounded-xl border p-4 text-left transition ${active
-                    ? "border-[#27B3C2] bg-[#062B49] shadow-md"
-                    : "border-slate-200 bg-white hover:border-[#27B3C2] hover:shadow-sm"
+                ? "border-[#27B3C2] bg-[#062B49] shadow-md"
+                : "border-slate-200 bg-white hover:border-[#27B3C2] hover:shadow-sm"
                 }`}
         >
             <div className="flex items-start gap-3">
                 <div
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${active
-                            ? "bg-white/10"
-                            : "bg-[#062B49]/5"
+                        ? "bg-white/10"
+                        : "bg-[#062B49]/5"
                         }`}
                 >
                     <Icon
                         className={`h-5 w-5 ${active
-                                ? "text-[#5DD5DE]"
-                                : "text-[#062B49]"
+                            ? "text-[#5DD5DE]"
+                            : "text-[#062B49]"
                             }`}
                     />
                 </div>
@@ -759,8 +839,8 @@ function CalculatorSelector({
                 <div>
                     <h3
                         className={`text-sm font-semibold ${active
-                                ? "text-white"
-                                : "text-[#062B49]"
+                            ? "text-white"
+                            : "text-[#062B49]"
                             }`}
                     >
                         {title}
@@ -768,8 +848,8 @@ function CalculatorSelector({
 
                     <p
                         className={`mt-1 text-xs leading-5 ${active
-                                ? "text-white/60"
-                                : "text-slate-500"
+                            ? "text-white/60"
+                            : "text-slate-500"
                             }`}
                     >
                         {description}
@@ -1034,35 +1114,59 @@ function ResultContent({
                 </div>
             );
 
-        case "roi":
+        case "rice-roi":
             return (
                 <div className="mt-7 space-y-4">
+
                     <ResultCard
-                        label="Estimated ROI"
-                        value={formatNumber(
-                            result.roiPercentage
-                        )}
-                        unit="%"
+                        label="Investment Recovery"
+                        value={
+                            Number.isFinite(result.paybackPeriod)
+                                ? formatNumber(result.paybackPeriod)
+                                : "N/A"
+                        }
+                        unit="years"
                         primary
                     />
+                    {/*             
+                        <div className="grid grid-cols-2 gap-3">
+            
+                            <ResultCard
+                                label="Daily Profit"
+                                value={formatCurrency(
+                                    result.dailyProfit
+                                )}
+                                unit="/day"
+                            />
+            
+                            <ResultCard
+                                label="Annual Profit"
+                                value={formatCurrency(
+                                    result.annualProfit
+                                )}
+                                unit="/year"
+                            />
+            
+                        </div>
+            
+                        <div className="grid grid-cols-2 gap-3">
+            
+                            <ResultCard
+                                label="Daily Sales"
+                                value={formatCurrency(
+                                    result.sale
+                                )}
+                                unit="/day"
+                            />
+            
+                            <ResultCard
+                                label="Investment"
+                                value={`₹${result.investment}`}
+                                unit="Cr"
+                            />
+            
+                        </div> */}
 
-                    <div className="grid grid-cols-2 gap-3">
-                        <ResultCard
-                            label="Payback Period"
-                            value={formatNumber(
-                                result.paybackPeriod
-                            )}
-                            unit="years"
-                        />
-
-                        <ResultCard
-                            label="Annual Benefit"
-                            value={formatCurrency(
-                                result.annualBenefit
-                            )}
-                            unit=""
-                        />
-                    </div>
                 </div>
             );
     }
@@ -1086,8 +1190,8 @@ function ResultCard({
     return (
         <div
             className={`rounded-xl p-4 ${primary
-                    ? "bg-white/10"
-                    : "bg-white/5"
+                ? "bg-white/10"
+                : "bg-white/5"
                 }`}
         >
             <p className="text-xs text-white/50">
@@ -1096,8 +1200,8 @@ function ResultCard({
 
             <p
                 className={`mt-1 font-bold ${primary
-                        ? "text-3xl text-white"
-                        : "text-lg text-[#5DD5DE]"
+                    ? "text-3xl text-white"
+                    : "text-lg text-[#5DD5DE]"
                     }`}
             >
                 {value}
@@ -1110,6 +1214,8 @@ function ResultCard({
             )}
         </div>
     );
+
+
 }
 
 /* =========================================================
