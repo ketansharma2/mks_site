@@ -11,7 +11,14 @@ import {
   Phone,
   User,
   Building2,
-  X,
+  Droplets,
+  Zap,
+  Recycle,
+  Gauge,
+  AlertTriangle,
+  Download,
+  MessageCircle,
+  RotateCcw,
 } from "lucide-react";
 
 type AssessmentData = {
@@ -27,9 +34,13 @@ type AssessmentData = {
   phone: string;
 };
 
-type PlantAssessmentProps = {
-  isOpen: boolean;
-  onClose: () => void;
+type PlantHealth = "Excellent" | "Good" | "Moderate" | "Needs Attention";
+
+type AssessmentResult = {
+  health: PlantHealth;
+  healthDescription: string;
+  opportunities: string[];
+  solutions: string[];
 };
 
 const initialData: AssessmentData = {
@@ -121,346 +132,368 @@ const objectives = [
 ];
 
 export default function PlantAssessment() {
-    const [step, setStep] = useState(0);
-    const [data, setData] = useState<AssessmentData>(initialData);
-    const [submitted, setSubmitted] = useState(false);
-  
-    const totalSteps = 8;
-  
-    const updateData = <K extends keyof AssessmentData>(
-      field: K,
-      value: AssessmentData[K]
-    ) => {
-      setData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    };
-  
-    const capacityLabel = useMemo(() => {
-      switch (data.requirement) {
-        case "water-wastewater":
-        case "zld":
-          return {
-            title: "What is your plant's water / wastewater flow?",
-            placeholder: "e.g. 500",
-            unit: "m³/day",
-          };
-  
-        case "evaporation":
-          return {
-            title: "What is your feed capacity?",
-            placeholder: "e.g. 5000",
-            unit: "kg/hr",
-          };
-  
-        case "drying":
-          return {
-            title: "What is your material / feed capacity?",
-            placeholder: "e.g. 2000",
-            unit: "kg/hr",
-          };
-  
-        case "energy":
-          return {
-            title: "What is your approximate plant capacity?",
-            placeholder: "Enter capacity",
-            unit: "",
-          };
-  
-        default:
-          return {
-            title: "What is your approximate plant capacity?",
-            placeholder: "Enter capacity",
-            unit: "",
-          };
-      }
-    }, [data.requirement]);
-  
-    const canContinue = () => {
-      switch (step) {
-        case 0:
-          return Boolean(data.industry);
-  
-        case 1:
-          return Boolean(data.requirement);
-  
-        case 2:
-          return Boolean(data.plantStatus);
-  
-        case 3:
-          return Boolean(data.capacity);
-  
-        case 4:
-          return Boolean(data.challenge);
-  
-        case 5:
-          return Boolean(data.objective);
-  
-        case 6:
-          return Boolean(
-            data.name &&
-              data.company &&
-              data.email &&
-              data.phone
-          );
-  
-        default:
-          return true;
-      }
-    };
-  
-    const nextStep = () => {
-      if (!canContinue()) return;
-  
-      if (step < totalSteps - 1) {
-        setStep((prev) => prev + 1);
-      } else {
-        handleSubmit();
-      }
-    };
-  
-    const previousStep = () => {
-      if (step > 0) {
-        setStep((prev) => prev - 1);
-      }
-    };
-  
-    const handleSubmit = async () => {
-      /*
-        Connect this later to:
-  
-        POST /api/plant-assessment
-  
-        Example:
-  
-        await fetch("/api/plant-assessment", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-      */
-  
-      setSubmitted(true);
-    };
-  
-    return (
-        <main className="bg-white text-slate-700">
-          {/* PAGE HERO */}
-          <section className="bg-[#062B49]">
-            <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 md:py-20 lg:px-8">
-              <div className="max-w-3xl">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#5DD5DE]">
-                  MKS Intelligence
-                </p>
-      
-                <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl ">
-                  Plant{" "}
-                  <span className=" text-[#5DD5DE]">
-                    Assessment
-                  </span>
-                </h1>
-      
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-white/70 md:text-base">
-                  Evaluate your plant requirements, identify key operational
-                  challenges and discover potential engineering solutions from MKS.
-                </p>
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState<AssessmentData>(initialData);
+  const [submitted, setSubmitted] = useState(false);
+
+  const totalSteps = 8;
+
+  const updateData = <K extends keyof AssessmentData>(
+    field: K,
+    value: AssessmentData[K]
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const capacityLabel = useMemo(() => {
+    switch (data.requirement) {
+      case "water-wastewater":
+      case "zld":
+        return {
+          title: "What is your plant's water / wastewater flow?",
+          placeholder: "e.g. 500",
+          unit: "m³/day",
+        };
+
+      case "evaporation":
+        return {
+          title: "What is your feed capacity?",
+          placeholder: "e.g. 5000",
+          unit: "kg/hr",
+        };
+
+      case "drying":
+        return {
+          title: "What is your material / feed capacity?",
+          placeholder: "e.g. 2000",
+          unit: "kg/hr",
+        };
+
+      case "energy":
+        return {
+          title: "What is your approximate plant capacity?",
+          placeholder: "Enter capacity",
+          unit: "",
+        };
+
+      default:
+        return {
+          title: "What is your approximate plant capacity?",
+          placeholder: "Enter capacity",
+          unit: "",
+        };
+    }
+  }, [data.requirement]);
+
+  const canContinue = () => {
+    switch (step) {
+      case 0:
+        return Boolean(data.industry);
+
+      case 1:
+        return Boolean(data.requirement);
+
+      case 2:
+        return Boolean(data.plantStatus);
+
+      case 3:
+        return Boolean(data.capacity);
+
+      case 4:
+        return Boolean(data.challenge);
+
+      case 5:
+        return Boolean(data.objective);
+
+      case 6:
+        return Boolean(
+          data.name.trim() &&
+            data.company.trim() &&
+            data.email.trim() &&
+            data.phone.trim()
+        );
+
+      case 7:
+        return true;
+
+      default:
+        return false;
+    }
+  };
+
+  const nextStep = () => {
+    if (!canContinue()) return;
+
+    if (step < totalSteps - 1) {
+      setStep((prev) => prev + 1);
+    } else {
+      handleSubmit();
+    }
+  };
+
+  const previousStep = () => {
+    if (step > 0) {
+      setStep((prev) => prev - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    /*
+      Production API can be connected here later.
+
+      Example:
+
+      await fetch("/api/plant-assessment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+    */
+
+    setSubmitted(true);
+  };
+
+  const resetAssessment = () => {
+    setData(initialData);
+    setStep(0);
+    setSubmitted(false);
+  };
+
+  return (
+    <main className="bg-white text-slate-700">
+      {/* HERO */}
+      <section className="bg-[#062B49]">
+        <div className="mx-auto max-w-7xl px-5 py-10 sm:px-6 md:py-20 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-[#5DD5DE]">
+              MKS Intelligence
+            </p>
+
+            <h1 className="text-3xl font-bold leading-tight text-white md:text-4xl">
+              Plant{" "}
+              <span className="text-[#5DD5DE]">
+                Assessment
+              </span>
+            </h1>
+
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-white/70 md:text-base">
+              Evaluate your plant requirements, identify operational
+              challenges and discover potential areas for improvement
+              with MKS engineering solutions.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ASSESSMENT */}
+      <section className="bg-slate-50 px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto flex w-full max-w-4xl items-center justify-center">
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 30,
+              scale: 0.97,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }}
+            transition={{
+              duration: 0.3,
+              ease: "easeOut",
+            }}
+            className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+          >
+            {/* HEADER */}
+            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-7">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#062B49]">
+                  <Factory className="h-5 w-5 text-[#5DD5DE]" />
+                </div>
+
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#27B3C2]">
+                    MKS Intelligence
+                  </p>
+
+                  <h2 className="text-base font-bold text-[#062B49] sm:text-lg">
+                    Plant Assessment
+                  </h2>
+                </div>
               </div>
             </div>
-          </section>
-      
-          {/* ASSESSMENT */}
-          <section className="bg-slate-50 px-4 py-10 sm:px-6 sm:py-14">
-            <div className="mx-auto flex w-full max-w-4xl items-center justify-center">
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 30,
-                  scale: 0.97,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                }}
-                transition={{
-                  duration: 0.3,
-                  ease: "easeOut",
-                }}
-                className="flex max-h-[90vh] w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-7">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#062B49]">
-                      <Factory className="h-5 w-5 text-[#5DD5DE]" />
-                    </div>
-      
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#27B3C2]">
-                        MKS Intelligence
-                      </p>
-      
-                      <h2 className="text-base font-bold text-[#062B49] sm:text-lg">
-                        Plant Assessment
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-      
-                {/* Progress */}
-                {!submitted && (
-                  <div className="px-5 pt-5 sm:px-8">
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-medium text-slate-500">
-                        Assessment Progress
-                      </span>
-      
-                      <span className="text-xs font-semibold text-[#062B49]">
-                        {step + 1} / {totalSteps}
-                      </span>
-                    </div>
-      
-                    <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
-                      <motion.div
-                        className="h-full bg-[#27B3C2]"
-                        animate={{
-                          width: `${((step + 1) / totalSteps) * 100}%`,
-                        }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    </div>
-                  </div>
-                )}
-      
-                {/* Content */}
-                <div className="min-h-0 flex-1 overflow-y-auto px-5 py-7 sm:px-8 sm:py-8">
-                  {submitted ? (
-                    <SuccessScreen data={data} />
-                  ) : (
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={step}
-                        initial={{ opacity: 0, x: 25 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -25 }}
-                        transition={{ duration: 0.22 }}
-                      >
-                        {step === 0 && (
-                          <IndustryStep
-                            value={data.industry}
-                            onChange={(value) =>
-                              updateData("industry", value)
-                            }
-                          />
-                        )}
-      
-                        {step === 1 && (
-                          <RequirementStep
-                            value={data.requirement}
-                            onChange={(value) =>
-                              updateData("requirement", value)
-                            }
-                          />
-                        )}
-      
-                        {step === 2 && (
-                          <PlantStatusStep
-                            value={data.plantStatus}
-                            onChange={(value) =>
-                              updateData("plantStatus", value)
-                            }
-                          />
-                        )}
-      
-                        {step === 3 && (
-                          <CapacityStep
-                            title={capacityLabel.title}
-                            placeholder={capacityLabel.placeholder}
-                            unit={capacityLabel.unit}
-                            value={data.capacity}
-                            onChange={(value) =>
-                              updateData("capacity", value)
-                            }
-                          />
-                        )}
-      
-                        {step === 4 && (
-                          <ChallengeStep
-                            value={data.challenge}
-                            onChange={(value) =>
-                              updateData("challenge", value)
-                            }
-                          />
-                        )}
-      
-                        {step === 5 && (
-                          <ObjectiveStep
-                            value={data.objective}
-                            onChange={(value) =>
-                              updateData("objective", value)
-                            }
-                          />
-                        )}
-      
-                        {step === 6 && (
-                          <ContactStep
-                            data={data}
-                            updateData={updateData}
-                          />
-                        )}
-      
-                        {step === 7 && (
-                          <ReviewStep data={data} />
-                        )}
-                      </motion.div>
-                    </AnimatePresence>
-                  )}
-                </div>
-      
-                {/* Footer */}
-                {!submitted && (
-                  <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-5 py-4 sm:px-8">
-                    <button
-                      type="button"
-                      onClick={previousStep}
-                      disabled={step === 0}
-                      className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-[#062B49] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30"
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      Back
-                    </button>
-      
-                    <button
-                      type="button"
-                      onClick={nextStep}
-                      disabled={!canContinue()}
-                      className="inline-flex items-center gap-2 rounded-lg bg-[#062B49] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0A4266] disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      {step === totalSteps - 1
-                        ? "Generate Assessment"
-                        : "Next"}
-      
-                      {step === totalSteps - 1 ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <ArrowRight className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            </div>
-          </section>
-        </main>
-      );
-  }
 
-/* -------------------------------------------------------
-   Shared UI
-------------------------------------------------------- */
+            {/* PROGRESS */}
+            {!submitted && (
+              <div className="px-5 pt-5 sm:px-8">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-medium text-slate-500">
+                    Assessment Progress
+                  </span>
+
+                  <span className="text-xs font-semibold text-[#062B49]">
+                    {step + 1} / {totalSteps}
+                  </span>
+                </div>
+
+                <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                  <motion.div
+                    className="h-full bg-[#27B3C2]"
+                    animate={{
+                      width: `${((step + 1) / totalSteps) * 100}%`,
+                    }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* CONTENT */}
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-7 sm:px-8 sm:py-8">
+              {submitted ? (
+                <AssessmentResultScreen
+                  data={data}
+                  onReset={resetAssessment}
+                />
+              ) : (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    initial={{
+                      opacity: 0,
+                      x: 25,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      x: -25,
+                    }}
+                    transition={{
+                      duration: 0.22,
+                    }}
+                  >
+                    {step === 0 && (
+                      <IndustryStep
+                        value={data.industry}
+                        onChange={(value) =>
+                          updateData("industry", value)
+                        }
+                      />
+                    )}
+
+                    {step === 1 && (
+                      <RequirementStep
+                        value={data.requirement}
+                        onChange={(value) =>
+                          updateData("requirement", value)
+                        }
+                      />
+                    )}
+
+                    {step === 2 && (
+                      <PlantStatusStep
+                        value={data.plantStatus}
+                        onChange={(value) =>
+                          updateData("plantStatus", value)
+                        }
+                      />
+                    )}
+
+                    {step === 3 && (
+                      <CapacityStep
+                        title={capacityLabel.title}
+                        placeholder={capacityLabel.placeholder}
+                        unit={capacityLabel.unit}
+                        value={data.capacity}
+                        onChange={(value) =>
+                          updateData("capacity", value)
+                        }
+                      />
+                    )}
+
+                    {step === 4 && (
+                      <ChallengeStep
+                        value={data.challenge}
+                        onChange={(value) =>
+                          updateData("challenge", value)
+                        }
+                      />
+                    )}
+
+                    {step === 5 && (
+                      <ObjectiveStep
+                        value={data.objective}
+                        onChange={(value) =>
+                          updateData("objective", value)
+                        }
+                      />
+                    )}
+
+                    {step === 6 && (
+                      <ContactStep
+                        data={data}
+                        updateData={updateData}
+                      />
+                    )}
+
+                    {step === 7 && (
+                      <ReviewStep data={data} />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </div>
+
+            {/* FOOTER */}
+            {!submitted && (
+              <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-5 py-4 sm:px-8">
+                <button
+                  type="button"
+                  onClick={previousStep}
+                  disabled={step === 0}
+                  className="inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-[#062B49] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  disabled={!canContinue()}
+                  className="inline-flex items-center gap-2 rounded-lg bg-[#062B49] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0A4266] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {step === totalSteps - 1
+                    ? "Generate Assessment"
+                    : "Next"}
+
+                  {step === totalSteps - 1 ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+/* =======================================================
+   SHARED UI
+======================================================= */
 
 function QuestionHeader({
   eyebrow,
@@ -505,6 +538,7 @@ function OptionButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={selected}
       className={`group relative w-full rounded-xl border p-4 text-left transition-all duration-200 ${
         selected
           ? "border-[#27B3C2] bg-[#27B3C2]/5 shadow-sm"
@@ -540,9 +574,9 @@ function OptionButton({
   );
 }
 
-/* -------------------------------------------------------
-   Steps
-------------------------------------------------------- */
+/* =======================================================
+   STEP 01
+======================================================= */
 
 function IndustryStep({
   value,
@@ -572,6 +606,10 @@ function IndustryStep({
     </>
   );
 }
+
+/* =======================================================
+   STEP 02
+======================================================= */
 
 function RequirementStep({
   value,
@@ -603,6 +641,10 @@ function RequirementStep({
   );
 }
 
+/* =======================================================
+   STEP 03
+======================================================= */
+
 function PlantStatusStep({
   value,
   onChange,
@@ -615,6 +657,7 @@ function PlantStatusStep({
       <QuestionHeader
         eyebrow="03 — Current Setup"
         title="What is the current status of your plant?"
+        description="This helps us understand whether the assessment is for an operating or planned facility."
       />
 
       <div className="grid gap-3">
@@ -630,6 +673,10 @@ function PlantStatusStep({
     </>
   );
 }
+
+/* =======================================================
+   STEP 04
+======================================================= */
 
 function CapacityStep({
   title,
@@ -655,8 +702,9 @@ function CapacityStep({
       <div className="mx-auto max-w-xl">
         <div className="relative">
           <input
-            type="text"
+            type="number"
             inputMode="decimal"
+            min="0"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
@@ -675,6 +723,10 @@ function CapacityStep({
   );
 }
 
+/* =======================================================
+   STEP 05
+======================================================= */
+
 function ChallengeStep({
   value,
   onChange,
@@ -687,6 +739,7 @@ function ChallengeStep({
       <QuestionHeader
         eyebrow="05 — Challenge"
         title="What is the main challenge you're facing?"
+        description="Select the issue that currently has the biggest impact on your plant."
       />
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -703,6 +756,10 @@ function ChallengeStep({
   );
 }
 
+/* =======================================================
+   STEP 06
+======================================================= */
+
 function ObjectiveStep({
   value,
   onChange,
@@ -715,6 +772,7 @@ function ObjectiveStep({
       <QuestionHeader
         eyebrow="06 — Objective"
         title="What is your primary project objective?"
+        description="Choose the outcome that matters most to your project."
       />
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -730,6 +788,10 @@ function ObjectiveStep({
     </>
   );
 }
+
+/* =======================================================
+   STEP 07
+======================================================= */
 
 function ContactStep({
   data,
@@ -788,6 +850,10 @@ function ContactStep({
   );
 }
 
+/* =======================================================
+   INPUT
+======================================================= */
+
 function InputField({
   icon,
   label,
@@ -821,6 +887,10 @@ function InputField({
   );
 }
 
+/* =======================================================
+   STEP 08
+======================================================= */
+
 function ReviewStep({
   data,
 }: {
@@ -831,11 +901,15 @@ function ReviewStep({
       <QuestionHeader
         eyebrow="08 — Review"
         title="Your plant assessment is ready to generate."
-        description="Review your information before we create your MKS Intelligence assessment."
+        description="Review your information before we prepare your MKS Intelligence assessment."
       />
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <ReviewItem label="Industry" value={data.industry} />
+        <ReviewItem
+          label="Industry"
+          value={data.industry}
+        />
+
         <ReviewItem
           label="Requirement"
           value={
@@ -844,18 +918,22 @@ function ReviewStep({
             )?.title || data.requirement
           }
         />
+
         <ReviewItem
           label="Plant Status"
           value={data.plantStatus}
         />
+
         <ReviewItem
           label="Capacity"
-          value={data.capacity}
+          value={formatCapacity(data)}
         />
+
         <ReviewItem
           label="Main Challenge"
           value={data.challenge}
         />
+
         <ReviewItem
           label="Primary Objective"
           value={data.objective}
@@ -864,10 +942,9 @@ function ReviewStep({
 
       <div className="mt-5 rounded-xl border border-[#27B3C2]/20 bg-[#27B3C2]/5 p-4">
         <p className="text-sm leading-6 text-slate-600">
-          MKS Intelligence will use these inputs to identify
-          relevant engineering considerations and potential MKS
-          solutions. A detailed technical proposal will require
-          further project information.
+          Your responses will be used to create an indicative
+          plant health assessment and identify potential areas
+          where MKS engineering solutions may help.
         </p>
       </div>
     </>
@@ -894,46 +971,346 @@ function ReviewItem({
   );
 }
 
-function SuccessScreen({
+/* =======================================================
+   RESULT LOGIC
+======================================================= */
+
+function calculateAssessment(
+  data: AssessmentData
+): AssessmentResult {
+  let points = 0;
+
+  /*
+    This is intentionally a simple preliminary rule engine.
+
+    Later you can replace this with a proper engineering
+    assessment model backed by MKS-approved assumptions.
+  */
+
+  if (
+    data.challenge === "Water recovery" ||
+    data.challenge === "Waste disposal"
+  ) {
+    points += 2;
+  }
+
+  if (
+    data.challenge === "High energy consumption" ||
+    data.challenge === "High operating cost"
+  ) {
+    points += 2;
+  }
+
+  if (
+    data.challenge === "Environmental compliance"
+  ) {
+    points += 2;
+  }
+
+  if (
+    data.objective === "Reduce operating cost" ||
+    data.objective === "Reduce energy consumption"
+  ) {
+    points += 1;
+  }
+
+  if (
+    data.objective === "Improve water recovery" ||
+    data.objective === "Meet environmental requirements"
+  ) {
+    points += 1;
+  }
+
+  let health: PlantHealth;
+
+  if (points >= 6) {
+    health = "Needs Attention";
+  } else if (points >= 4) {
+    health = "Moderate";
+  } else if (points >= 2) {
+    health = "Good";
+  } else {
+    health = "Excellent";
+  }
+
+  const opportunities: string[] = [];
+  const solutions: string[] = [];
+
+  if (
+    data.requirement === "water-wastewater" ||
+    data.challenge === "Water recovery"
+  ) {
+    opportunities.push("Water recovery and reuse");
+    solutions.push("Water Treatment / RO Systems");
+  }
+
+  if (
+    data.requirement === "zld" ||
+    data.challenge === "Waste disposal"
+  ) {
+    opportunities.push("Wastewater reduction and ZLD potential");
+    solutions.push("Zero Liquid Discharge (ZLD)");
+  }
+
+  if (
+    data.requirement === "evaporation"
+  ) {
+    opportunities.push("Process concentration and evaporation optimization");
+    solutions.push("Industrial Evaporation Systems");
+    solutions.push("MVR Evaporation Technology");
+  }
+
+  if (
+    data.requirement === "drying"
+  ) {
+    opportunities.push("Drying efficiency and process optimization");
+    solutions.push("Industrial Drying Systems");
+  }
+
+  if (
+    data.requirement === "energy" ||
+    data.challenge === "High energy consumption"
+  ) {
+    opportunities.push("Energy and utility optimization");
+    solutions.push("Energy / Utility Optimization");
+  }
+
+  if (
+    data.objective === "Increase production capacity"
+  ) {
+    opportunities.push("Plant capacity and process improvement");
+    solutions.push("Process Engineering & Plant Expansion");
+  }
+
+  if (
+    data.objective === "Upgrade existing plant"
+  ) {
+    opportunities.push("Existing plant modernization");
+    solutions.push("Plant Upgrade & Engineering Services");
+  }
+
+  if (opportunities.length === 0) {
+    opportunities.push(
+      "Detailed process and utility assessment"
+    );
+  }
+
+  if (solutions.length === 0) {
+    solutions.push(
+      "Detailed Engineering Assessment by MKS"
+    );
+  }
+
+  const healthDescription =
+    health === "Excellent"
+      ? "Your responses indicate a relatively stable plant profile with limited immediate improvement areas."
+      : health === "Good"
+      ? "Your plant appears to have some opportunities for operational improvement and optimization."
+      : health === "Moderate"
+      ? "Your responses indicate several areas where process, energy or water optimization may provide meaningful benefits."
+      : "Your responses indicate significant areas that may require engineering attention and further technical evaluation.";
+
+  return {
+    health,
+    healthDescription,
+    opportunities: [...new Set(opportunities)],
+    solutions: [...new Set(solutions)],
+  };
+}
+
+/* =======================================================
+   RESULT SCREEN
+======================================================= */
+
+function AssessmentResultScreen({
   data,
+  onReset,
 }: {
   data: AssessmentData;
+  onReset: () => void;
 }) {
+  const result = calculateAssessment(data);
+
+  const healthIcon =
+    result.health === "Needs Attention" ? (
+      <AlertTriangle className="h-8 w-8" />
+    ) : result.health === "Moderate" ? (
+      <Gauge className="h-8 w-8" />
+    ) : result.health === "Good" ? (
+      <Check className="h-8 w-8" />
+    ) : (
+      <Check className="h-8 w-8" />
+    );
+
   return (
-    <div className="flex min-h-[430px] flex-col items-center justify-center text-center">
-      <motion.div
-        initial={{ scale: 0.7, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="flex h-16 w-16 items-center justify-center rounded-full bg-[#27B3C2]/10"
-      >
-        <Check className="h-8 w-8 text-[#27B3C2]" />
-      </motion.div>
-
-      <p className="mt-6 text-xs font-bold uppercase tracking-[0.2em] text-[#27B3C2]">
-        MKS Intelligence
-      </p>
-
-      <h3 className="mt-2 text-3xl font-bold text-[#062B49]">
-        Assessment Submitted
-      </h3>
-
-      <p className="mt-3 max-w-lg text-sm leading-6 text-slate-500">
-        Thank you, {data.name}. Your plant information has been
-        recorded. The MKS team can now review your requirements
-        and prepare the appropriate engineering response.
-      </p>
-
-      <div className="mt-7 rounded-xl border border-slate-200 bg-slate-50 px-6 py-4">
-        <p className="text-xs text-slate-400">
-          Requirement
+    <div className="space-y-7">
+      {/* RESULT HEADER */}
+      <div className="text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#27B3C2]">
+          MKS Intelligence
         </p>
 
-        <p className="mt-1 font-semibold text-[#062B49]">
-          {requirements.find(
-            (item) => item.value === data.requirement
-          )?.title || data.requirement}
+        <h3 className="mt-2 text-3xl font-bold text-[#062B49]">
+          Plant Health
+        </h3>
+
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500">
+          Based on the information you provided, here is your
+          preliminary plant health assessment.
         </p>
       </div>
+
+      {/* HEALTH CARD */}
+      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 text-center">
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#27B3C2]/10 text-[#27B3C2]">
+          {healthIcon}
+        </div>
+
+        <p className="mt-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+          Current Assessment
+        </p>
+
+        <h4 className="mt-1 text-2xl font-bold text-[#062B49]">
+          {result.health}
+        </h4>
+
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500">
+          {result.healthDescription}
+        </p>
+      </div>
+
+      {/* OPPORTUNITIES */}
+      <div>
+        <div className="mb-3 flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#27B3C2]/10">
+            <Droplets className="h-4 w-4 text-[#27B3C2]" />
+          </div>
+
+          <h4 className="font-bold text-[#062B49]">
+            Key Opportunities
+          </h4>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          {result.opportunities.map((item) => (
+            <div
+              key={item}
+              className="rounded-xl border border-slate-200 bg-white p-4"
+            >
+              <div className="flex items-start gap-3">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#27B3C2]" />
+
+                <p className="text-sm font-medium text-slate-600">
+                  {item}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* SOLUTIONS */}
+      <div>
+        <div className="mb-3 flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#062B49]/10">
+            <Factory className="h-4 w-4 text-[#062B49]" />
+          </div>
+
+          <h4 className="font-bold text-[#062B49]">
+            Potential MKS Solutions
+          </h4>
+        </div>
+
+        <div className="space-y-3">
+          {result.solutions.map((solution) => (
+            <div
+              key={solution}
+              className="flex items-center gap-3 rounded-xl border border-[#27B3C2]/20 bg-[#27B3C2]/5 p-4"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white">
+                <Recycle className="h-4 w-4 text-[#27B3C2]" />
+              </div>
+
+              <p className="text-sm font-semibold text-[#062B49]">
+                {solution}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* DISCLAIMER */}
+      <div className="rounded-xl border border-slate-200 bg-white p-4">
+        <p className="text-xs leading-5 text-slate-500">
+          <strong className="text-slate-600">
+            Important:
+          </strong>{" "}
+          This is a preliminary assessment based on the
+          information provided. It is not a final engineering
+          design, performance guarantee or financial quotation.
+          Detailed recommendations require validation by MKS
+          engineers and additional project information.
+        </p>
+      </div>
+
+      {/* ACTIONS */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <button
+          type="button"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#062B49] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0A4266]"
+        >
+          <Download className="h-4 w-4" />
+          Download Assessment
+        </button>
+
+        <button
+          type="button"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#062B49] px-5 py-3 text-sm font-semibold text-[#062B49] transition hover:bg-slate-50"
+        >
+          <MessageCircle className="h-4 w-4" />
+          Discuss With MKS Engineer
+        </button>
+      </div>
+
+      {/* RESET */}
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={onReset}
+          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 transition hover:text-[#062B49]"
+        >
+          <RotateCcw className="h-3.5 w-3.5" />
+          Start New Assessment
+        </button>
+      </div>
+
+      <p className="text-center text-xs text-slate-400">
+        Assessment prepared for {data.company}
+      </p>
     </div>
   );
+}
+
+/* =======================================================
+   HELPERS
+======================================================= */
+
+function formatCapacity(data: AssessmentData) {
+  if (!data.capacity) return "";
+
+  if (
+    data.requirement === "water-wastewater" ||
+    data.requirement === "zld"
+  ) {
+    return `${data.capacity} m³/day`;
+  }
+
+  if (
+    data.requirement === "evaporation" ||
+    data.requirement === "drying"
+  ) {
+    return `${data.capacity} kg/hr`;
+  }
+
+  return data.capacity;
 }
