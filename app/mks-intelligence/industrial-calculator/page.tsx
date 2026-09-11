@@ -8,15 +8,16 @@ import {
     Factory,
     Zap,
     Recycle,
+    Loader2,
     TrendingUp,
     RotateCcw,
 } from "lucide-react";
 
-import { calculateWaterSaving } from "@/app/lib/calculators/waterSaving";
-import { calculateZLD } from "@/app/lib/calculators/zld";
-import { calculatePlantCapacity } from "@/app/lib/calculators/plantCapacity";
-import { calculateEnergy } from "@/app/lib/calculators/energy";
-import { calculateWastewater } from "@/app/lib/calculators/wastewater";
+// import { calculateWaterSaving } from "@/app/lib/calculators/waterSaving";
+// import { calculateZLD } from "@/app/lib/calculators/zld";
+// import { calculatePlantCapacity } from "@/app/lib/calculators/plantCapacity";
+// import { calculateEnergy } from "@/app/lib/calculators/energy";
+// import { calculateWastewater } from "@/app/lib/calculators/wastewater";
 import { calculateRicePlantROI, plantOptions } from "@/app/lib/calculators/ricePlantROI"
 
 type CalculatorType =
@@ -37,7 +38,7 @@ const calculatorTitles: Record<CalculatorType, string> = {
     capacity: "Plant Capacity Calculator",
     energy: "Energy Calculator",
     wastewater: "Wastewater Treatment Calculator",
-    "rice-roi": "Rice Plant ROI Calculator",
+    "rice-roi": "Liquid Glucose Plant ROI Calculator (Rice Based)",
 };
 
 const defaultInputs: Record<
@@ -81,19 +82,21 @@ const defaultInputs: Record<
 
     "rice-roi": {
         capacity: "100",
-        brokerRiceCost: "",
+        brokenRiceCost: "",
         electricityCost: "",
         steamCost: "",
     },
 };
 
 export default function IndustrialCalculatorPage() {
+    const [error, setError] = useState("");
+    const [isCalculating, setIsCalculating] = useState(false);
     const [selectedCalculator, setSelectedCalculator] =
         useState<CalculatorType>("rice-roi");
 
     const [inputs, setInputs] =
         useState<CalculatorInputData>(
-            defaultInputs["water-saving"]
+            defaultInputs["rice-roi"]
         );
 
     const [result, setResult] = useState<any>(null);
@@ -110,16 +113,14 @@ export default function IndustrialCalculatorPage() {
         setHasCalculated(false);
     };
 
-    const handleInputChange = (
-        field: string,
-        value: string
-    ) => {
+    const handleInputChange = (field: string, value: string) => {
         setInputs((previous) => ({
             ...previous,
             [field]: value,
         }));
 
         setHasCalculated(false);
+        setError("");
     };
 
     const getNumber = (field: string) => {
@@ -127,95 +128,52 @@ export default function IndustrialCalculatorPage() {
     };
 
     const calculate = () => {
-        let calculatedResult: any;
-        switch (selectedCalculator) {
-            case "water-saving":
-                calculatedResult = calculateWaterSaving({
-                    currentConsumption:
-                        getNumber("currentConsumption"),
-                    currentRecovery:
-                        getNumber("currentRecovery"),
-                    targetRecovery:
-                        getNumber("targetRecovery"),
-                    operatingDays:
-                        getNumber("operatingDays"),
-                });
+        const hasEmptyField = Object.values(inputs).some(
+            (value) => value.trim() === ""
+        );
 
-                break;
-
-            case "zld":
-                calculatedResult = calculateZLD({
-                    wastewaterFlow:
-                        getNumber("wastewaterFlow"),
-                    roRecovery:
-                        getNumber("roRecovery"),
-                    meeRecovery:
-                        getNumber("meeRecovery"),
-                    atfdRecovery:
-                        getNumber("atfdRecovery"),
-                });
-
-                break;
-
-            case "capacity":
-                calculatedResult = calculatePlantCapacity({
-                    requiredProduction:
-                        getNumber("requiredProduction"),
-                    operatingHours:
-                        getNumber("operatingHours"),
-                    operatingDays:
-                        getNumber("operatingDays"),
-                    designMargin:
-                        getNumber("designMargin"),
-                });
-
-                break;
-
-            case "energy":
-                calculatedResult = calculateEnergy({
-                    equipmentLoad:
-                        getNumber("equipmentLoad"),
-                    operatingHours:
-                        getNumber("operatingHours"),
-                    operatingDays:
-                        getNumber("operatingDays"),
-                    electricityCost:
-                        getNumber("electricityCost"),
-                });
-
-                break;
-
-            case "wastewater":
-                calculatedResult = calculateWastewater({
-                    wastewaterFlow:
-                        getNumber("wastewaterFlow"),
-                    bod: getNumber("bod"),
-                    cod: getNumber("cod"),
-                    tss: getNumber("tss"),
-                });
-
-                break;
-
-            case "rice-roi":
-                calculatedResult = calculateRicePlantROI({
-                    capacity: getNumber("capacity"),
-                    brokenRiceCost: getNumber("brokerRiceCost"),
-                    electricityCost: getNumber("electricityCost"),
-                    steamCost: getNumber("steamCost"),
-                });
-
-                break;
-
+        if (hasEmptyField) {
+            setError("Please complete all fields before calculating.");
+            return;
         }
+        setError("");
 
-        setResult(calculatedResult);
-        setHasCalculated(true);
+        setIsCalculating(true);
+        setHasCalculated(false);
+        setResult(null);
+
+        setTimeout(() => {
+            let calculatedResult: any;
+
+            switch (selectedCalculator) {
+                case "rice-roi":
+                    calculatedResult = calculateRicePlantROI({
+                        capacity: getNumber("capacity"),
+                        brokenRiceCost: getNumber("brokenRiceCost"),
+                        electricityCost: getNumber("electricityCost"),
+                        steamCost: getNumber("steamCost"),
+                    });
+                    break;
+            }
+
+            setResult(calculatedResult);
+            setHasCalculated(true);
+            setIsCalculating(false);
+            // Clear calculator input values
+            setInputs({
+                capacity: inputs.capacity,
+                brokenRiceCost: "",
+                electricityCost: "",
+                steamCost: "",
+            });
+        }, 10000);
     };
 
     const resetCalculator = () => {
         setInputs(defaultInputs[selectedCalculator]);
         setResult(null);
         setHasCalculated(false);
+        setIsCalculating(false);
     };
 
     return (
@@ -269,13 +227,21 @@ export default function IndustrialCalculatorPage() {
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             <CalculatorSelector
                                 id="rice-roi"
-                                title="Rice Plant ROI"
+                                title="Rice based Liquid Glucose Plant ROI Calculator"
                                 description="Estimate rice plant investment recovery"
                                 icon={TrendingUp}
                                 active={selectedCalculator === "rice-roi"}
                                 onClick={handleCalculatorChange}
                             />
-                            <CalculatorSelector
+                            {/* <CalculatorSelector
+                                id="water-saving"
+                                title="Liquid Glucose Plant ROI Calculator (Rice Based)"
+                                description="Estimate rice plant investment recovery"
+                                icon={TrendingUp}
+                                active={selectedCalculator === "water-saving"}
+                                onClick={handleCalculatorChange}
+                            /> */}
+                            {/* <CalculatorSelector
                                 id="water-saving"
                                 title="Water Saving"
                                 description="Estimate potential water savings"
@@ -293,17 +259,17 @@ export default function IndustrialCalculatorPage() {
                                 icon={Waves}
                                 active={selectedCalculator === "zld"}
                                 onClick={handleCalculatorChange}
-                            />
+                            /> */}
 
                             <CalculatorSelector
                                 id="capacity"
-                                title="Plant Capacity"
-                                description="Estimate required plant capacity"
+                                title="Liquid Glucose Plant ROI Calculator (Rice Based)"
+                                description="Estimate rice plant investment recovery"
                                 icon={Factory}
                                 active={selectedCalculator === "capacity"}
                                 onClick={handleCalculatorChange}
                             />
-
+                            {/* 
                             <CalculatorSelector
                                 id="energy"
                                 title="Energy Calculator"
@@ -320,7 +286,7 @@ export default function IndustrialCalculatorPage() {
                                 icon={Recycle}
                                 active={selectedCalculator === "wastewater"}
                                 onClick={handleCalculatorChange}
-                            />
+                            /> */}
 
 
                         </div>
@@ -625,7 +591,7 @@ export default function IndustrialCalculatorPage() {
                                     {/* Plant Capacity */}
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-[#062B49]">
-                                            Plant Capacity
+                                            Choose Plant Capacity
                                         </label>
 
                                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -671,38 +637,7 @@ export default function IndustrialCalculatorPage() {
                                         </div>
                                     </div>
 
-                                    {/* Investment */}
-                                    <div className="rounded-xl border border-[#27B3C2]/20 bg-[#27B3C2]/5 p-4">
-                                        <div className="flex items-center justify-between gap-4">
-                                            <div>
-                                                <p className="text-sm font-medium text-slate-600">
-                                                    Capital Investment
-                                                </p>
 
-                                                <p className="mt-1 text-xl font-bold text-[#062B49]">
-                                                    ₹
-                                                    {
-                                                        plantOptions.find(
-                                                            (plant) =>
-                                                                plant.capacity ===
-                                                                Number(inputs.capacity)
-                                                        )?.investment
-                                                    }{" "}
-                                                    Cr
-                                                </p>
-                                            </div>
-
-                                            <div className="text-right">
-                                                <p className="text-xs text-slate-500">
-                                                    Selected Capacity
-                                                </p>
-
-                                                <p className="mt-0.5 font-semibold text-[#062B49]">
-                                                    {inputs.capacity} TPD
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
 
                                     {/* Operating Costs */}
                                     <div className="border-t border-slate-100 pt-4">
@@ -720,9 +655,9 @@ export default function IndustrialCalculatorPage() {
                                         label="Broken Rice Cost"
                                         placeholder="e.g. 25"
                                         unit="₹ / kg"
-                                        value={inputs.brokerRiceCost}
+                                        value={inputs.brokenRiceCost}
                                         onChange={(value) =>
-                                            handleInputChange("brokerRiceCost", value)
+                                            handleInputChange("brokenRiceCost", value)
                                         }
                                     />
 
@@ -731,7 +666,8 @@ export default function IndustrialCalculatorPage() {
                                         <CalculatorInput
                                             label="Electricity Cost"
                                             placeholder="e.g. 8"
-                                            unit="₹ / kg"
+                                            unit="₹ / kwh"
+
                                             value={inputs.electricityCost}
                                             onChange={(value) =>
                                                 handleInputChange(
@@ -758,14 +694,45 @@ export default function IndustrialCalculatorPage() {
                                 </div>
                             )}
 
+                            {error && (
+                                <div className="mt-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                    <span className="font-semibold">!</span>
+                                    <span>{error}</span>
+                                </div>
+                            )}
                             <div className="mt-7 flex gap-3">
                                 <button
                                     type="button"
                                     onClick={calculate}
-                                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#062B49] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#0A4266]"
+                                    disabled={isCalculating}
+                                    className="
+        group
+        flex w-full
+        items-center justify-center gap-2
+        rounded-lg
+        bg-[#062B49]
+        px-4 py-3
+        text-sm font-semibold text-white
+        shadow-sm
+        transition-all duration-200
+        hover:bg-[#0A4266]
+        hover:shadow-md
+        active:scale-[0.98]
+        disabled:cursor-not-allowed
+        disabled:opacity-70
+    "
                                 >
-                                    Calculate
-                                    <ArrowRight className="h-4 w-4" />
+                                    {isCalculating ? (
+                                        <>
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            Calculating...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Calculate
+                                            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                                        </>
+                                    )}
                                 </button>
 
                                 <button
@@ -823,7 +790,7 @@ function CalculatorSelector({
         >
             <div className="flex items-start gap-3">
                 <div
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${active
+                    className={`flex h-10 w-5 shrink-0 items-center justify-center rounded-lg ${active
                         ? "bg-white/10"
                         : "bg-[#062B49]/5"
                         }`}
@@ -888,7 +855,7 @@ function CalculatorInput({
                     type="number"
                     min="0"
                     step="any"
-                    value={value}
+                    value={value ?? ""}
                     onChange={(event) =>
                         onChange(event.target.value)
                     }
@@ -946,10 +913,16 @@ function CalculatorResults({
 
             <div className="mt-6 border-t border-white/10 pt-5">
                 <p className="text-xs leading-5 text-white/50">
-                    Results are preliminary estimates based on the
-                    parameters provided. Actual plant performance,
-                    equipment sizing and project economics require
-                    detailed engineering evaluation.
+                    Results are preliminary estimates based on the parameters provided.<br />
+                    Actual plant performance, equipment sizing, and project economics
+                    require detailed engineering evaluation.{" "}
+                    <a
+                        href="/contact"
+                        className="font-medium text-[#5DD5DE] underline underline-offset-2 transition-colors hover:text-white"
+                    >
+                        Contact our engineers
+                    </a>{" "}
+                    for a detailed evaluation.
                 </p>
             </div>
         </div>
