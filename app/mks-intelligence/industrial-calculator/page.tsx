@@ -13,6 +13,7 @@ import {
     RotateCcw,
 } from "lucide-react";
 
+
 // import { calculateWaterSaving } from "@/app/lib/calculators/waterSaving";
 // import { calculateZLD } from "@/app/lib/calculators/zld";
 // import { calculatePlantCapacity } from "@/app/lib/calculators/plantCapacity";
@@ -89,6 +90,10 @@ const defaultInputs: Record<
 };
 
 export default function IndustrialCalculatorPage() {
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [email, setEmail] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [pendingResult, setPendingResult] = useState<any>(null);
     const [error, setError] = useState("");
     const [isCalculating, setIsCalculating] = useState(false);
     const [selectedCalculator, setSelectedCalculator] =
@@ -156,8 +161,8 @@ export default function IndustrialCalculatorPage() {
                     break;
             }
 
-            setResult(calculatedResult);
-            setHasCalculated(true);
+            setPendingResult(calculatedResult);
+            setShowEmailModal(true);
             setIsCalculating(false);
             // Clear calculator input values
             setInputs({
@@ -174,6 +179,26 @@ export default function IndustrialCalculatorPage() {
         setResult(null);
         setHasCalculated(false);
         setIsCalculating(false);
+    };
+
+    const handleEmailSubmit = () => {
+        const trimmedEmail = email.trim();
+    
+        if (!trimmedEmail) {
+            setEmailError("Email is required.");
+            return;
+        }
+    
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+            setEmailError("Please enter a valid email address.");
+            return;
+        }
+    
+        setEmailError("");
+    
+        setResult(pendingResult);
+        setHasCalculated(true);
+        setShowEmailModal(false);
     };
 
     return (
@@ -756,6 +781,65 @@ export default function IndustrialCalculatorPage() {
                     </div>
                 </div>
             </section>
+            {showEmailModal && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+        <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+
+            <h2 className="text-xl font-bold text-[#062B49]">
+                View Your ROI Result
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-slate-500">
+                Enter your email address to view your estimated
+                investment recovery.
+            </p>
+
+            <div className="mt-5">
+                <label
+                    htmlFor="roi-email"
+                    className="mb-2 block text-sm font-semibold text-[#062B49]"
+                >
+                    Email Address
+                </label>
+
+                <input
+                    id="roi-email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => {
+                        setEmail(event.target.value);
+                        setEmailError("");
+                    }}
+                    placeholder="you@example.com"
+                    className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-[#27B3C2] focus:ring-2 focus:ring-[#27B3C2]/10"
+                />
+
+                {emailError && (
+                    <p className="mt-2 text-sm text-red-600">
+                        {emailError}
+                    </p>
+                )}
+            </div>
+
+            <button
+                type="button"
+                onClick={handleEmailSubmit}
+                className="mt-5 w-full rounded-lg bg-[#062B49] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#0A4266]"
+            >
+                View My Result
+            </button>
+
+            <button
+                type="button"
+                onClick={() => setShowEmailModal(false)}
+                className="mt-3 w-full py-2 text-sm text-slate-500 hover:text-[#062B49]"
+            >
+                Cancel
+            </button>
+
+        </div>
+    </div>
+)}
         </main>
     );
 }
